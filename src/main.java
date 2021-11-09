@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 class Main {
   public static void main(String[] args) {
-    int vertexCount = 5000;
+    int vertexCount = 10;
     int randomSTCount = 5;
     long startTime;
     long estimatedTime;
@@ -20,7 +20,9 @@ class Main {
     // estimatedTime = System.nanoTime() - startTime;
     // System.out.println("Milliseconds elsapsed for average percentage 20%: " + TimeUnit.MILLISECONDS.convert(estimatedTime, TimeUnit.NANOSECONDS));
     int[] randSTPair = Utils.randomPair(0, vertexCount);
-    Routing.dijkstra_naive(graph1, randSTPair[0], randSTPair[1]);
+    System.out.println(String.format("Max-Bandwith-Path between %d and %d", randSTPair[0], randSTPair[1]));
+    System.out.println(Routing.dijkstra_naive(graph1, randSTPair[0], randSTPair[1]));
+    System.out.println("");
 
 
     // MaxHeap heap = new MaxHeap(9);
@@ -93,5 +95,5 @@ class Main {
   //     // }
   //     System.out.println(String.format("------------------ Graph Pair %d End ----------------", i+1));
   //   }
-  // }
+  }
 }

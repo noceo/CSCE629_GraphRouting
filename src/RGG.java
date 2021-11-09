@@ -31,13 +31,30 @@ public class RGG {
       adjList.add(new LinkedList<Vertex>());
     }
 
-    // make initial cycle to ensure that graph is connected
-    makeCycle(vertexCount, adjList, vertices);
-
     // temp array of sets to check if vertex is contained in the given list of the random vector in constant time
     List<Set<Integer>> tempAdjSets = new ArrayList<Set<Integer>>();
     for (int i = 0; i < vertexCount; i++) {
       tempAdjSets.add(new HashSet<Integer>());
+    }
+
+    // make initial cycle to ensure that graph is connected
+    Vertex v;
+    Vertex w;
+    for (int i = 0; i < vertexCount; i++) {
+      v = vertices.get(i);
+      if (i != vertexCount - 1) {
+        w = vertices.get(i+1);
+        adjList.get(i).add(w);
+        adjList.get(i+1).add(v);
+        tempAdjSets.get(i).add(w.getName());
+        tempAdjSets.get(i+1).add(v.getName());
+      } else {
+        w = vertices.get(0);
+        adjList.get(i).add(w);
+        adjList.get(0).add(v);
+        tempAdjSets.get(i).add(w.getName());
+        tempAdjSets.get(0).add(v.getName());
+      }
     }
 
     // add edges randomly
@@ -58,25 +75,13 @@ public class RGG {
     return adjList;
   }
 
-  private static void makeCycle(int vertexCount, List<List<Vertex>> adjList, List<Vertex> vertices) {
-    for (int i = 0; i < vertexCount; i++) {
-      if (i != vertexCount - 1) {
-        adjList.get(i).add(vertices.get(i+1));
-        adjList.get(i+1).add(vertices.get(i));
-      } else {
-        adjList.get(i).add(vertices.get(0));
-        adjList.get(0).add(vertices.get(i));
-      }
-    }
-  }
-
   private static int random(int min, int max) {
     return ThreadLocalRandom.current().nextInt(min, max);
   }
 
   private static void print(List<List<Vertex>> adjList) {
-    // for (int i = 0; i < adjList.size(); i++) {
-    //   System.out.println(String.format("%s -> %s", i, adjList.get(i).toString()));
-    // }
+    for (int i = 0; i < adjList.size(); i++) {
+      System.out.println(String.format("%s -> %s", i, adjList.get(i).toString()));
+    }
   }
 }

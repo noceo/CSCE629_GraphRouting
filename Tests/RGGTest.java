@@ -1,8 +1,12 @@
 package Tests;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -47,5 +51,45 @@ public class RGGTest {
     int averageDegree = sum / graph.size();
     System.out.println(averageDegree);
     assertTrue(averageDegree >= degree - spreadRange && averageDegree <= degree + spreadRange);
+  }
+
+  @Test
+  public void testIntegrity() {
+    int vertexCount = 5000;
+    List<List<Vertex>> graph = RGG.averageDegree(vertexCount, 6, 1, 10);
+    List<Set<Integer>> sets = new ArrayList<Set<Integer>>();
+
+    for (int i = 0; i < graph.size(); i++) {
+      sets.add(new HashSet<Integer>());
+    }
+
+    for (int i = 0; i < graph.size(); i++) {
+      for (int j = 0; j < graph.get(i).size(); j++) {
+        int name = graph.get(i).get(j).getName();
+        // Check that a vertex has no edge with itself
+        assertNotEquals(i, name);
+
+        // Check that every vertex has only one edge to another vertex
+        assertTrue(sets.get(i).add(name));
+      }
+    }
+
+    List<List<Vertex>> graph2 = RGG.averagePercentage(vertexCount, 0.2f, 1, 10);
+    List<Set<Integer>> sets2 = new ArrayList<Set<Integer>>();
+    
+    for (int i = 0; i < graph2.size(); i++) {
+      sets2.add(new HashSet<Integer>());
+    }
+
+    for (int i = 0; i < graph2.size(); i++) {
+      for (int j = 0; j < graph2.get(i).size(); j++) {
+        int name = graph2.get(i).get(j).getName();
+        // Check that a vertex has no edge with itself
+        assertNotEquals(i, name);
+
+        // Check that every vertex has only one edge to another vertex
+        assertTrue(sets2.get(i).add(name));
+      }
+    }
   }
 }
