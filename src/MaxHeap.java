@@ -20,46 +20,6 @@ public class MaxHeap {
     Arrays.fill(this.P, -1);
   }
 
-  public int max() {
-    int max = D[H[0]];
-    D[H[0]] = -1;
-    P[H[0]] = -1;
-    H[0] = H[size-1];
-    size--;
-    fixHeap(0);
-    return max;
-  }
-
-  public void insert(int name, int value) {
-    int pos = size;
-    H[pos] = name;
-    D[name] = value;
-    P[name] = pos;
-    while (getValueAt(pos) > getValueAt(parent(pos))) {
-        swap(pos, parent(pos));
-        pos = parent(pos);
-    }
-    size++;
-  }
-
-  public void delete(int name) {
-    int pos = P[name];
-    P[name] = -1;
-    D[H[pos]] = -1;
-    H[pos] = H[size-1];
-    H[size-1] = -1;
-    size--;
-    if (getValueAt(pos) < getValueAt(parent(pos)) || pos == 0) {
-      fixHeap(pos);
-    }
-    else {
-      while (pos > 1 && getValueAt(pos) > getValueAt(parent(pos))) {
-        swap(pos, parent(pos));
-        pos = parent(pos);
-      }
-    }
-  }
-
   public void print() {
     for (int i = 0; i < this.size / 2; i++) {
       System.out.print(
@@ -70,6 +30,71 @@ public class MaxHeap {
     }
   }
 
+  public Vertex max() {
+    int name = H[0];
+    int value = D[name];
+    return new Vertex(name, value);
+  }
+
+  public void insert(int name, int value) {
+    ins(name, value);
+  }
+
+  public void insert(Vertex v) {
+    int name = v.getName();
+    int value = v.getValue();
+    ins(name, value);
+  }
+
+  public void delete(int name) {
+    del(name);
+  }
+
+  public void delete(Vertex v) {
+    del(v.getName());
+  }
+
+  private void del(int name) {
+    int pos = P[name];
+    // System.out.println("Delete: " + name);
+    // System.out.println("Position: " + pos);
+    // System.out.println("Name: " + H[pos]);
+    // System.out.println("H: " + Arrays.toString(H));
+    // System.out.println("P: " + Arrays.toString(P));
+    P[name] = -1;
+    D[H[pos]] = -1;
+
+    // Swap last element to deleted slot
+    H[pos] = H[size-1];
+    P[H[pos]] = pos;
+
+    H[size-1] = -1;
+    size--;
+
+    if (getValueAt(pos) < getValueAt(parent(pos)) || pos == 0) {
+      fixHeap(pos);
+    }
+    else {
+      while (pos > 1 && getValueAt(pos) > getValueAt(parent(pos))) {
+        swap(pos, parent(pos));
+        pos = parent(pos);
+      }
+    }
+    // System.out.println("H modified: " + Arrays.toString(H));
+    // System.out.println("P modified: " + Arrays.toString(P));
+  }
+
+  private void ins(int name, int value) {
+    int pos = size;
+    H[pos] = name;
+    D[name] = value;
+    P[name] = pos;
+    while (getValueAt(pos) > getValueAt(parent(pos))) {
+        swap(pos, parent(pos));
+        pos = parent(pos);
+    }
+    size++;
+  }
 
   private int parent(int pos) { return (pos - 1) / 2; }
 
@@ -121,7 +146,7 @@ public class MaxHeap {
   }
 
   public int[] getH() {
-    return this.H;
+    return Arrays.copyOfRange(this.H, 0, this.size);
   }
 
   public int[] getD() {

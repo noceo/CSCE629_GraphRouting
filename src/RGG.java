@@ -71,7 +71,7 @@ public class RGG {
       tempAdjSets.get(randV).add(randW);
       tempAdjSets.get(randW).add(randV);
     }
-    print(adjList);
+    // print(adjList);
     return adjList;
   }
 

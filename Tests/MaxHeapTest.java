@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 import src.MaxHeap;
+import src.Vertex;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MaxHeapTest {
@@ -14,10 +16,10 @@ public class MaxHeapTest {
  
     // Inserting nodes
     for (int i = 0; i < heap.getMaxSize(); i++) {
-      heap.insert(i, ThreadLocalRandom.current().nextInt(0, 100));
+      heap.insert(new Vertex(i, ThreadLocalRandom.current().nextInt(0, 100)));
     }
 
-    max = heap.max();
+    max = heap.max().getValue();
     System.out.println(max);
 
     // Check if extracted max is bigger than all other values in the heap
@@ -27,9 +29,7 @@ public class MaxHeapTest {
       }
       assertTrue(max >= heap.getValueAt(i));
     }
-
     assertTrue(testHeapIntegrity(heap));
-
   }
 
   @Test
@@ -38,7 +38,7 @@ public class MaxHeapTest {
  
     // Inserting nodes
     for (int i = 0; i < heap.getMaxSize(); i++) {
-      heap.insert(i, ThreadLocalRandom.current().nextInt(0, 100));
+      heap.insert(new Vertex(i, ThreadLocalRandom.current().nextInt(0, 100)));
       assertTrue(testHeapIntegrity(heap));
     }
   }
@@ -47,28 +47,18 @@ public class MaxHeapTest {
   public void testDelete() {
     for (int j = 0; j < 1000; j++) {
       // System.out.println(j);
-      MaxHeap heap = new MaxHeap(17);
+      MaxHeap heap = new MaxHeap(100);
       
       // Inserting nodes
       for (int i = 0; i < heap.getMaxSize(); i++) {
-        heap.insert(i, ThreadLocalRandom.current().nextInt(0, 100));
+        heap.insert(new Vertex(i, ThreadLocalRandom.current().nextInt(0, 100)));
       }
 
       for (int i = 0; i < heap.getSize(); i++) {
-        System.out.println(heap.getH()[i]);
+        heap.delete(i);
       }
-      heap.print();
-      heap.delete(0);
-      heap.print();
       assertTrue(testHeapIntegrity(heap));
     }
-
-    // for (int i = heap.getMaxSize() - 1; i >= 1; i--) {
-    //   heap.delete(i);
-    //   System.out.println("Deletion " + i);
-    //   heap.print();
-    //   assertTrue(testHeapIntegrity(heap));
-    // }
   }
 
   private boolean testHeapIntegrity(MaxHeap heap) {
