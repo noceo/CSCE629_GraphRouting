@@ -29,7 +29,7 @@ public class MaxHeapTest {
       }
       assertTrue(max >= heap.getValueAt(i));
     }
-    assertTrue(testHeapIntegrity(heap));
+    assertTrue(testHeapProperty(heap));
   }
 
   @Test
@@ -39,7 +39,7 @@ public class MaxHeapTest {
     // Inserting nodes
     for (int i = 0; i < heap.getMaxSize(); i++) {
       heap.insert(new Vertex(i, ThreadLocalRandom.current().nextInt(0, 100)));
-      assertTrue(testHeapIntegrity(heap));
+      assertTrue(testHeapProperty(heap));
     }
   }
 
@@ -57,11 +57,11 @@ public class MaxHeapTest {
       for (int i = 0; i < heap.getSize(); i++) {
         heap.delete(i);
       }
-      assertTrue(testHeapIntegrity(heap));
+      assertTrue(testHeapProperty(heap));
     }
   }
 
-  private boolean testHeapIntegrity(MaxHeap heap) {
+  private boolean testHeapProperty(MaxHeap heap) {
     // Check if first entry is the max
     int max = heap.getValueAt(0);
     for (int i = 1; i < heap.getSize(); i++) {

@@ -56,11 +56,6 @@ public class MaxHeap {
 
   private void del(int name) {
     int pos = P[name];
-    // System.out.println("Delete: " + name);
-    // System.out.println("Position: " + pos);
-    // System.out.println("Name: " + H[pos]);
-    // System.out.println("H: " + Arrays.toString(H));
-    // System.out.println("P: " + Arrays.toString(P));
     P[name] = -1;
     D[H[pos]] = -1;
 
@@ -80,8 +75,6 @@ public class MaxHeap {
         pos = parent(pos);
       }
     }
-    // System.out.println("H modified: " + Arrays.toString(H));
-    // System.out.println("P modified: " + Arrays.toString(P));
   }
 
   private void ins(int name, int value) {
