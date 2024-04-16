@@ -68,7 +68,11 @@ public class RGGTest {
         int name = graph.get(i).get(j).getName();
         // Check that a vertex has no edge with itself
         assertNotEquals(i, name);
-
+        // if (!sets.get(i).add(name)) {
+        //   System.out.println(name + " " + i); //+ " " + sets.get(i));
+        //   System.out.println(graph.get(i));
+        //   System.out.println(graph.get(j));
+        // }
         // Check that every vertex has only one edge to another vertex
         assertTrue(sets.get(i).add(name));
       }

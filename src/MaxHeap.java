@@ -9,6 +9,10 @@ public class MaxHeap {
   private int size;
   private int maxSize;
 
+  /**
+   * Constructs a heap with a given size
+   * @param maxSize
+   */
   public MaxHeap(int maxSize) {
     this.maxSize = maxSize;
     this.size = 0;
@@ -20,6 +24,9 @@ public class MaxHeap {
     Arrays.fill(this.P, -1);
   }
 
+  /**
+   * Prints the heap
+   */
   public void print() {
     for (int i = 0; i < this.size / 2; i++) {
       System.out.print(
@@ -30,30 +37,55 @@ public class MaxHeap {
     }
   }
 
+  /**
+   * Returns the maximum (first) element stored in the heap 
+   * @return
+   */
   public Vertex max() {
     int name = H[0];
     int value = D[name];
     return new Vertex(name, value);
   }
 
+  /**
+   * Inserts an element into the heap
+   * @param name name of the element
+   * @param value value of the element
+   */
   public void insert(int name, int value) {
     ins(name, value);
   }
 
+  /**
+   * Inserts an element into the heap
+   * @param v Vertex
+   */
   public void insert(Vertex v) {
     int name = v.getName();
     int value = v.getValue();
     ins(name, value);
   }
 
+  /**
+   * Removes an element from the heap
+   * @param name name of the element
+   */
   public void delete(int name) {
     del(name);
   }
 
+  /**
+   * Removes an element from the heap
+   * @param v Vertex
+   */
   public void delete(Vertex v) {
     del(v.getName());
   }
 
+  /**
+   * Removes an element from the heap
+   * @param name
+   */
   private void del(int name) {
     int pos = P[name];
     P[name] = -1;
@@ -77,6 +109,11 @@ public class MaxHeap {
     }
   }
 
+  /**
+   * Inserts an element into the heap
+   * @param name
+   * @param value
+   */
   private void ins(int name, int value) {
     int pos = size;
     H[pos] = name;
@@ -89,12 +126,32 @@ public class MaxHeap {
     size++;
   }
 
+  /**
+   * Gets the parent of a specific position in the heap based on the position of that element
+   * @param pos
+   * @return
+   */
   private int parent(int pos) { return (pos - 1) / 2; }
 
+  /**
+   * Gets the left child of a specific element in the heap based on the position of that element
+   * @param pos
+   * @return
+   */
   private int leftChild(int pos) { return ((pos * 2) + 1); }
 
+  /**
+   * Gets the right child of a specific element in the heap based on the position of that element
+   * @param pos
+   * @return
+   */
   private int rightChild(int pos) { return ((pos + 1) * 2); }
 
+  /**
+   * Checks if the element at a given position is a leaf
+   * @param pos
+   * @return
+   */
   private boolean isLeaf(int pos) {
     if (pos > ((size - 1) / 2) && pos <= (size - 1)) {
         return true;
@@ -102,6 +159,11 @@ public class MaxHeap {
     return false;
   }
 
+  /**
+   * Swaps two elements in the heap given their positions
+   * @param leftPos
+   * @param rightPos
+   */
   private void swap(int leftPos, int rightPos) {
     int tmpH;
     int tmpP;
@@ -114,18 +176,22 @@ public class MaxHeap {
     H[rightPos] = tmpH;
   }
 
-  private void fixHeap(int i) {
-    if (isLeaf(i))
+  /**
+   * Fixes the heap property downwards from a given position
+   * @param pos
+   */
+  private void fixHeap(int pos) {
+    if (isLeaf(pos))
         return;
 
-    if (getValueAt(i) < getValueAt(leftChild(i)) || getValueAt(i) < getValueAt(rightChild(i))) {
-      if (getValueAt(leftChild(i)) > getValueAt(rightChild(i))) {
-          swap(i, leftChild(i));
-          fixHeap(leftChild(i));
+    if (getValueAt(pos) < getValueAt(leftChild(pos)) || getValueAt(pos) < getValueAt(rightChild(pos))) {
+      if (getValueAt(leftChild(pos)) > getValueAt(rightChild(pos))) {
+          swap(pos, leftChild(pos));
+          fixHeap(leftChild(pos));
       }
       else {
-        swap(i, rightChild(i));
-        fixHeap(rightChild(i));
+        swap(pos, rightChild(pos));
+        fixHeap(rightChild(pos));
       }
     }
   }

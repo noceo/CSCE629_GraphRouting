@@ -5,10 +5,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
-import src.Kruskal.DisjointSet;
 
 public class Routing {
   public static List<Vertex> dijkstra_naive(List<List<Vertex>> adjList, int s, int t) {
@@ -33,10 +32,8 @@ public class Routing {
       fringeCount++;
     }
 
-    int k = 0;
     while (fringeCount != 0) {
       int maxIndex = getMaxIndex(status, bw);
-      k += vertexCount;
       status[maxIndex] = Status.IN_TREE;
       fringeCount--;
       for (int i = 0; i < adjList.get(maxIndex).size(); i++) {
@@ -55,8 +52,6 @@ public class Routing {
         }
       }
     }
-
-    System.out.println("Steps: " + k);
 
     if (status[t] == Status.IN_TREE) {
       int x = t;
@@ -91,14 +86,9 @@ public class Routing {
       dad[w.getName()] = s;
       fringes.insert(w);
     }
-    int k = 0;
+
     while (fringes.getSize() > 0) {
       Vertex currentSrc = fringes.max();
-      if (k < 10) { 
-        // System.out.println(Arrays.toString(fringes.getH()));
-        // System.out.println("Delete name: " + currentSrc.getName() + " value: " + currentSrc.getValue());
-      }
-      k++;
       int currentName = currentSrc.getName();
       status[currentSrc.getName()] = Status.IN_TREE;
       fringes.delete(currentName);
@@ -121,48 +111,88 @@ public class Routing {
       }
     }
 
-    if (status[t] != Status.IN_TREE) {
-      return path;
+    if (status[t] == Status.IN_TREE) {
+      int x = t;
+      while (x != s) {
+        path.add(new Vertex(x, bw[x]));
+        x = dad[x];
+      }
+      path.add(new Vertex(s, bw[s]));
+      Collections.reverse(path);
     }
-    
-    int x = t;
-    while (x != s) {
-      path.add(new Vertex(x, bw[x]));
-      x = dad[x];
-    }
-    path.add(new Vertex(s, bw[s]));
-    Collections.reverse(path);
     return path;
   }
 
-  public static void kruskal(List<List<Vertex>> adjList, int s, int t) {
-    Set<Edge> edges = new HashSet<Edge>();
-    for (int i = 0; i < adjList.size(); i++) {
-      List<Vertex> vertices = adjList.get(i);
-      for (int j = 0; j < vertices.size(); j++) {
-        edges.add(new Edge(i, vertices.get(j).getName(), vertices.get(j).getValue()));
-      }
+  public static List<Vertex> kruskal(List<List<Vertex>> adjList, int s, int t) {
+    int vertexCount = adjList.size();
+
+    // init max spanning tree
+    List<List<Vertex>> maxSpanningTree = new ArrayList<List<Vertex>>(vertexCount);
+    for (int i = 0; i < vertexCount; i++) {
+      maxSpanningTree.add(new LinkedList<Vertex>());
     }
 
-    List<Edge> edgeList = new ArrayList<Edge>(edges);
-    edgeList.sort(Collections.reverseOrder(Comparator.comparing(e -> e.getValue())));
+    // construct a list from the edge set and sort
+    List<Edge> edgeList = sortEdges(adjList);
 
-    int totalNodes = adjList.size();
+    
+    // init the disjoint sets and start processing every edge
     int edgeCount = 0;
-
-    List<List<Edge>> maxSpanningTree = ValueGraphBuilder.undirected().build();
+    List<DisjointSet> disjointSets = initDisjointSets(vertexCount);
     for (int i = 0; i < edgeList.size(); i++) {
         Edge e = edgeList.get(i);
-        if (detectCycle(e.getV(), e.getW())) {
+        if (detectCycle(disjointSets, e.getV(), e.getW())) {
             continue;
         }
-        spanningTree.putEdgeValue(edge.nodeU(), edge.nodeV(), graph.edgeValue(edge).get());
+
+        int vName = e.getV();
+        int wName = e.getW();
+        int weight = e.getValue();
+        maxSpanningTree.get(vName).add(new Vertex(wName, weight));
+        maxSpanningTree.get(wName).add(new Vertex(vName, weight));
         edgeCount++;
-        if (edgeCount == totalNodes - 1) {
+        if (edgeCount == vertexCount - 1) {
             break;
         }
     }
-    return spanningTree;
+
+    // run dijkstra on the maximum spanning tree
+    return dijkstra_heap(maxSpanningTree, s, t);
+  }
+
+  public static List<Edge> sortEdges(List<List<Vertex>> adjList) {
+    int vertexCount = adjList.size();
+    List<Edge> edges = new ArrayList<Edge>();
+    List<Edge> sortedEdges = new ArrayList<Edge>();
+
+    // maximum number of edges with duplicates is V^2 so set max size to V^2
+    MaxHeap heap = new MaxHeap(vertexCount * vertexCount);
+    
+    int edgeCount = 0;
+    // add edges to the set so that are no duplicates (v -> w || v <- w)
+    for (int i = 0; i < adjList.size(); i++) {
+      List<Vertex> vertices = adjList.get(i);
+      for (int j = 0; j < vertices.size(); j++) {
+        Vertex w = vertices.get(j);
+
+        if (w.getName() > i) {
+          edges.add(new Edge(i, w.getName(), w.getValue()));
+          heap.insert(edgeCount, w.getValue());
+          edgeCount++;
+        }
+      }
+    }
+    
+    // do heap sort
+    for (int i = 0; i < edges.size(); i++) {
+      Vertex v = heap.max();
+      Edge e = edges.get(v.getName());
+      sortedEdges.add(e);
+      heap.delete(v);
+    }
+    
+    // edges.sort(Collections.reverseOrder(Comparator.comparing(e -> e.getValue())));
+    return sortedEdges;
   }
 
   private static int getMaxIndex(Status[] status, int[] bw) {

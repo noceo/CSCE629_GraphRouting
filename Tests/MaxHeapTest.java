@@ -56,8 +56,8 @@ public class MaxHeapTest {
 
       for (int i = 0; i < heap.getSize(); i++) {
         heap.delete(i);
+        assertTrue(testHeapProperty(heap));
       }
-      assertTrue(testHeapProperty(heap));
     }
   }
 

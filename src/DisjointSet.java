@@ -1,4 +1,4 @@
-package src.Kruskal;
+package src;
 
 public class DisjointSet {
   private Integer parent;

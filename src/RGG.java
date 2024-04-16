@@ -45,13 +45,13 @@ public class RGG {
       if (i != vertexCount - 1) {
         w = vertices.get(i+1);
         adjList.get(i).add(w);
-        adjList.get(i+1).add(v);
+        adjList.get(i+1).add(new Vertex(v.getName(), w.getValue()));
         tempAdjSets.get(i).add(w.getName());
         tempAdjSets.get(i+1).add(v.getName());
       } else {
         w = vertices.get(0);
         adjList.get(i).add(w);
-        adjList.get(0).add(v);
+        adjList.get(0).add(new Vertex(v.getName(), w.getValue()));
         tempAdjSets.get(i).add(w.getName());
         tempAdjSets.get(0).add(v.getName());
       }
@@ -67,7 +67,7 @@ public class RGG {
         randW = random(0, vertexCount);
       }
       adjList.get(randV).add(vertices.get(randW));
-      adjList.get(randW).add(vertices.get(randV));
+      adjList.get(randW).add(new Vertex(randV, vertices.get(randW).getValue()));
       tempAdjSets.get(randV).add(randW);
       tempAdjSets.get(randW).add(randV);
     }
