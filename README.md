@@ -14,4 +14,4 @@ weight in P. The naive implementation of Dijkstra’s algorithm is compared with
 heap for storing vertices and Kruskal’s algorithm that ﬁrst ﬁnds the maximum spanning tree and then
 performs the heap version of Dijkstra on that maximum spanning tree.
 
-For a full report of the project see: [report/report.pdf](Report).
+For a full report of the project see: [Report](report/report.pdf)
